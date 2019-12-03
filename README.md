@@ -129,6 +129,29 @@ By configuring ``import`` properties the manager will register a local proxy for
 By configuring ``export`` properties the manager will export all the locally registered event definitions to Minio, when possible. If locally registered buckets are missing, the export will ignore them. If the ``clear`` flag is set to true, any event found in Minio matching the given SQS ARN and not registered on the manager will be removed.
 
  
- 
+### Log level
+To modify the *log level* update the property either via file or via ENV
+```
+logging.level.it.smartcommunitylab.minionotificationsmanager=${LOG_LEVEL:INFO}
+```
 
+### Database
+All the event registrations are persisted inside a persistent database.
+By default the system will leverage an embedded H2 database, a solution suitable for development or small scale deployments. If required, configure an external database by updating the configuration
+
+```
+spring.datasource.url=${JDBC_URL:jdbc:h2:file:./data/db}
+spring.datasource.driverClassName=${JDBC_DRIVER:org.h2.Driver}
+spring.datasource.username=${JDBC_USER:sa}
+spring.datasource.password=${JDBC_PASS:password}
+spring.jpa.database-platform=${JDBC_DIALECT:org.hibernate.dialect.H2Dialect}
+```
+
+Supported RDBMS are:
+* embedded H2
+* MySQL 5.5+
+* PostgreSQL 9+
+
+The system won't perform any kind of migration, so switching from one datasource to another is a disruptive operation. If required, perform an external backup/restore **before** switching configurations.
+ 
 
